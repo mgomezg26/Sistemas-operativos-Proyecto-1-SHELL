@@ -1,0 +1,43 @@
+echo ---------- PRUEBA 1: comando simple ----------
+echo hola mundo desde mi shell
+echo ---------- PRUEBA 2: comando con varios argumentos ----------
+ls
+echo ---------- PRUEBA 3: redireccion de salida ----------
+echo alfa beta gamma > p_salida.txt
+cat p_salida.txt
+echo ---------- PRUEBA 4: redireccion de entrada ----------
+cat < p_salida.txt
+echo ---------- PRUEBA 5: redireccion de entrada hacia wc ----------
+wc < p_salida.txt
+echo ---------- PRUEBA 6: tuberia simple ----------
+cat p_salida.txt | wc
+echo ---------- PRUEBA 7: tuberia con grep ----------
+ls | grep p_salida
+echo ---------- PRUEBA 8: tuberia de tres etapas ----------
+cat p_salida.txt | cat | wc
+echo ---------- PRUEBA 9: tuberia + redireccion de entrada ----------
+cat < p_salida.txt | wc
+echo ---------- PRUEBA 10: tuberia + redireccion de salida ----------
+cat p_salida.txt | wc > p_conteo.txt
+cat p_conteo.txt
+echo ---------- PRUEBA 11: entrada y salida a la vez ----------
+cat < p_salida.txt > p_copia.txt
+cat p_copia.txt
+echo ---------- PRUEBA 12: redireccion antes del comando ----------
+< p_salida.txt wc
+echo ---------- PRUEBA 13: secuencia con punto y coma ----------
+echo primero ; echo segundo
+echo ---------- PRUEBA 14: comando inexistente (debe dar error y seguir vivo) ----------
+comando_que_no_existe
+echo ---------- PRUEBA 15: error de sintaxis (falta el archivo) ----------
+wc <
+echo ---------- PRUEBA 16: archivo de entrada inexistente ----------
+cat < archivo_que_no_existe.txt
+echo ---------- PRUEBA 17: comando interno cd ----------
+mkdir p_dir
+cd p_dir
+/echo estoy dentro de p_dir > adentro.txt
+/ls
+cd ..
+echo ---------- PRUEBA 18: el shell sigue funcionando ----------
+echo todas las pruebas terminaron
