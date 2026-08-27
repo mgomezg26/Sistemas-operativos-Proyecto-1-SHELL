@@ -17,20 +17,6 @@
 //    2) ANALIZAR esa linea y construir un ARBOL de comandos.
 //    3) EJECUTAR ese arbol recursivamente usando fork/exec/pipe/dup.
 //
-//  El arbol es la parte clave. Por ejemplo, la linea
-//
-//        cat < entrada.txt | grep hola > salida.txt
-//
-//  se convierte en:
-//
-//                        PIPE
-//                        |  |
-//              REDIR(<) -+  +- REDIR(>)
-//                 |             |
-//              EXEC(cat)     EXEC(grep hola)
-//
-//  Ejecutar el nodo PIPE crea la tuberia y dos procesos hijos; cada hijo
-//  ejecuta recursivamente su propio subarbol.
 // ===========================================================================
 
 
