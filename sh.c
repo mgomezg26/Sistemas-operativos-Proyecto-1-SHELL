@@ -140,7 +140,7 @@ int         fork1(void);
 
 
 
-//  1. CONSTRUCTORES DE NODOS
+//  CONSTRUCTORES DE NODOS
 //  Cada uno reserva memoria con malloc, la pone en cero (para que los
 //  punteros que no se usen queden en NULL) y rellena los campos.
 
@@ -212,7 +212,7 @@ crear_back(struct cmd *sub)
 
 
 
-//  2. TOKENIZADOR (analisis lexico)
+//  TOKENIZADOR (analisis lexico)
 //  Convierte la linea de texto en "tokens". Un token puede ser:
 //     'a'  -> una palabra (nombre de programa, argumento o nombre de archivo)
 //     '|'  '<'  '>'  ';'  '&'   -> un simbolo especial
@@ -280,7 +280,7 @@ buscar(char **ps, char *fin_s, char *tokens)
 
 
 
-//  3. ANALIZADOR SINTACTICO (parser)
+//  ANALIZADOR SINTACTICO (parser)
 //  Gramatica que se implementa (descenso recursivo):
 //     linea   ::=  pipe  [ '&' ]  [ ';' linea ]
 //     pipe    ::=  exec  [ '|' pipe ]
@@ -478,8 +478,7 @@ terminar_cadenas(struct cmd *cmd)
 
 
 
-//  4. EJECUCION
-//
+//  EJECUCION
 //  ejecutar_cmd() SIEMPRE se llama dentro de un proceso hijo y NUNCA regresa:
 //  termina llamando a exec() o a exit(). Eso simplifica mucho el codigo,
 //  porque cada rama del arbol puede "adueñarse" de su proceso.
@@ -511,11 +510,9 @@ ejecutar_cmd(struct cmd *cmd)
 
   switch(cmd->tipo){
 
-  // -------------------------------------------------------------------
   //  COMANDO SIMPLE
   //  exec() reemplaza la imagen del proceso actual por el programa pedido.
   //  Si tiene exito NO regresa; si regresa, es que fallo.
-  // -------------------------------------------------------------------
   case TIPO_EXEC:
     {
       struct cmd_exec *ecmd = (struct cmd_exec*)cmd;
@@ -527,13 +524,11 @@ ejecutar_cmd(struct cmd *cmd)
     }
     break;
 
-  // -------------------------------------------------------------------
   //  REDIRECCION
   //  Truco clave de Unix: open() siempre devuelve el descriptor LIBRE MAS
   //  PEQUEÑO. Si cerramos el 0 (o el 1) justo antes, el archivo que abrimos
   //  ocupa exactamente ese numero, y el programa que ejecutemos despues
   //  creera que esta leyendo del teclado / escribiendo en pantalla.
-  // -------------------------------------------------------------------
   case TIPO_REDIR:
     {
       struct cmd_redir *rcmd = (struct cmd_redir*)cmd;
@@ -546,7 +541,6 @@ ejecutar_cmd(struct cmd *cmd)
     }
     break;
 
-  // -------------------------------------------------------------------
   //  TUBERIA
   //  pipe(p) crea un canal:  p[0] = extremo de LECTURA, p[1] = ESCRITURA.
   //  Se crean dos hijos: el izquierdo escribe en p[1] como si fuera stdout,
@@ -555,7 +549,7 @@ ejecutar_cmd(struct cmd *cmd)
   //  Cerrar los extremos que NO se usan es obligatorio: mientras exista
   //  algun proceso con el extremo de escritura abierto, el lector se queda
   //  esperando para siempre y el shell se cuelga.
-  // -------------------------------------------------------------------
+
   case TIPO_PIPE:
     {
       struct cmd_pipe *pcmd = (struct cmd_pipe*)cmd;
@@ -596,9 +590,7 @@ ejecutar_cmd(struct cmd *cmd)
     }
     break;
 
-  // -------------------------------------------------------------------
   //  SECUENCIA  ( ; )
-  // -------------------------------------------------------------------
   case TIPO_LIST:
     {
       struct cmd_list *lcmd = (struct cmd_list*)cmd;
@@ -611,10 +603,8 @@ ejecutar_cmd(struct cmd *cmd)
     }
     break;
 
-  // -------------------------------------------------------------------
   //  SEGUNDO PLANO  ( & )
   //  Se crea el hijo pero NO se espera por el.
-  // -------------------------------------------------------------------
   case TIPO_BACK:
     {
       struct cmd_back *bcmd = (struct cmd_back*)cmd;
@@ -634,9 +624,7 @@ ejecutar_cmd(struct cmd *cmd)
 }
 
 
-
-//  5. LECTURA DE LA LINEA Y COMANDOS INTERNOS
-
+//  LECTURA DE LA LINEA Y COMANDOS INTERNOS
 
 // Lee una linea de la entrada estandar, sin el '\n' final.
 // Devuelve el numero de caracteres leidos, o -1 si se acabo la entrada.
@@ -679,12 +667,10 @@ empieza_con(char *linea, char *palabra)
 
 
 //  Los comandos internos NO pueden ejecutarse con fork+exec.
-//
 //  'cd' es el ejemplo clasico: chdir() cambia el directorio del proceso que
 //  la llama. Si lo hicieramos en un hijo, el hijo cambiaria de directorio,
 //  moriria, y el shell (el padre) seguiria exactamente donde estaba.
 //  Por eso 'cd' se ejecuta en el propio proceso del shell.
-//
 //  Devuelve 1 si la linea era un comando interno y ya fue atendida.
 
 int
@@ -721,7 +707,7 @@ comando_interno(char *linea)
 
 
 
-//  6. BUCLE PRINCIPAL
+//  BUCLE PRINCIPAL
 
 
 int
