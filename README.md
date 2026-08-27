@@ -9,7 +9,7 @@ Guía de compilación, ejecución y explicación del código.
 |---|---|
 | `sh.c` | El intérprete de comandos completo, escrito desde cero y comentado |
 | `pruebas.txt` | Batería de 18 pruebas que se ejecuta dentro de xv6 |
-| `GUIA.md` | Este documento |
+| `README.md` | Este documento |
 
 ---
 
