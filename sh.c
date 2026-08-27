@@ -57,14 +57,13 @@
 #  include "stat.h"
 #  include "fcntl.h"
 #  include "user.h"
-#  define SALIR(n)    exit()           // en xv6-public exit() no recibe nada
-#  define ESPERAR()   wait()           // y wait() tampoco
+#  define SALIR(n)    exit()           
+#  define ESPERAR()   wait()           
 #  define ERRF(...)   printf(2, __VA_ARGS__)
 #  define OUTF(...)   printf(1, __VA_ARGS__)
 #endif
 
 // Banderas para abrir el archivo destino de '>'.
-// O_TRUNC no existe en las versiones mas viejas de xv6, por eso se comprueba.
 #ifdef O_TRUNC
 #  define MODO_ESCRITURA (O_WRONLY | O_CREATE | O_TRUNC)
 #else
@@ -72,16 +71,16 @@
 #endif
 
 
-// ---------------------------------------------------------------------------
+
 //  Limites
-// ---------------------------------------------------------------------------
+
 #define MAX_ARGS   16     // maximo de argumentos por comando (incluye argv[0])
 #define MAX_LINEA  128    // maximo de caracteres por linea de entrada
 
 
-// ---------------------------------------------------------------------------
+
 //  Tipos de nodo del arbol de comandos
-// ---------------------------------------------------------------------------
+
 #define TIPO_EXEC   1     // comando simple:  ls -l
 #define TIPO_REDIR  2     // redireccion:     ... < arch   o   ... > arch
 #define TIPO_PIPE   3     // tuberia:         izq | der
@@ -127,9 +126,9 @@ struct cmd_back {
 };
 
 
-// ---------------------------------------------------------------------------
+
 //  Prototipos
-// ---------------------------------------------------------------------------
+
 struct cmd* analizar_cmd(char *s);
 struct cmd* analizar_linea(char **ps, char *fin_s);
 struct cmd* analizar_pipe(char **ps, char *fin_s);
@@ -140,12 +139,11 @@ void        ejecutar_cmd(struct cmd *cmd);
 int         fork1(void);
 
 
-// ===========================================================================
+
 //  1. CONSTRUCTORES DE NODOS
-//
 //  Cada uno reserva memoria con malloc, la pone en cero (para que los
 //  punteros que no se usen queden en NULL) y rellena los campos.
-// ===========================================================================
+
 
 struct cmd*
 crear_exec(void)
@@ -213,9 +211,8 @@ crear_back(struct cmd *sub)
 }
 
 
-// ===========================================================================
+
 //  2. TOKENIZADOR (analisis lexico)
-//
 //  Convierte la linea de texto en "tokens". Un token puede ser:
 //     'a'  -> una palabra (nombre de programa, argumento o nombre de archivo)
 //     '|'  '<'  '>'  ';'  '&'   -> un simbolo especial
@@ -224,7 +221,7 @@ crear_back(struct cmd *sub)
 //  IMPORTANTE: no se copian cadenas. Se devuelven punteros al inicio y al
 //  final de cada palabra dentro del buffer original. Los caracteres '\0'
 //  se colocan al final, en terminar_cadenas().
-// ===========================================================================
+
 
 char espacios[] = " \t\r\n\v";
 char simbolos[] = "<|>;&";
@@ -282,18 +279,15 @@ buscar(char **ps, char *fin_s, char *tokens)
 }
 
 
-// ===========================================================================
+
 //  3. ANALIZADOR SINTACTICO (parser)
-//
 //  Gramatica que se implementa (descenso recursivo):
-//
 //     linea   ::=  pipe  [ '&' ]  [ ';' linea ]
 //     pipe    ::=  exec  [ '|' pipe ]
 //     exec    ::=  { redir | palabra }
 //     redir   ::=  ( '<' | '>' ) palabra
-//
 //  Cada funcion devuelve un nodo del arbol, o 0 si hubo un error de sintaxis.
-// ===========================================================================
+
 
 struct cmd*
 analizar_cmd(char *s)
@@ -483,13 +477,13 @@ terminar_cadenas(struct cmd *cmd)
 }
 
 
-// ===========================================================================
+
 //  4. EJECUCION
 //
 //  ejecutar_cmd() SIEMPRE se llama dentro de un proceso hijo y NUNCA regresa:
 //  termina llamando a exec() o a exit(). Eso simplifica mucho el codigo,
 //  porque cada rama del arbol puede "adueñarse" de su proceso.
-// ===========================================================================
+
 
 // fork() que aborta si falla, para no tener que comprobarlo en cada sitio.
 int
@@ -640,9 +634,9 @@ ejecutar_cmd(struct cmd *cmd)
 }
 
 
-// ===========================================================================
+
 //  5. LECTURA DE LA LINEA Y COMANDOS INTERNOS
-// ===========================================================================
+
 
 // Lee una linea de la entrada estandar, sin el '\n' final.
 // Devuelve el numero de caracteres leidos, o -1 si se acabo la entrada.
@@ -683,7 +677,7 @@ empieza_con(char *linea, char *palabra)
   return *linea == 0 || *linea == ' ' || *linea == '\t';
 }
 
-// ---------------------------------------------------------------------------
+
 //  Los comandos internos NO pueden ejecutarse con fork+exec.
 //
 //  'cd' es el ejemplo clasico: chdir() cambia el directorio del proceso que
@@ -692,7 +686,7 @@ empieza_con(char *linea, char *palabra)
 //  Por eso 'cd' se ejecuta en el propio proceso del shell.
 //
 //  Devuelve 1 si la linea era un comando interno y ya fue atendida.
-// ---------------------------------------------------------------------------
+
 int
 comando_interno(char *linea)
 {
@@ -726,9 +720,9 @@ comando_interno(char *linea)
 }
 
 
-// ===========================================================================
+
 //  6. BUCLE PRINCIPAL
-// ===========================================================================
+
 
 int
 main(void)
