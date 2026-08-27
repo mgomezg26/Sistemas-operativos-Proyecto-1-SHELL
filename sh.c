@@ -34,15 +34,7 @@
 // ===========================================================================
 
 
-// ---------------------------------------------------------------------------
-//  Compatibilidad entre las dos versiones de xv6
-//
-//  xv6-riscv (MIT, actual)  -> cabeceras en  kernel/  y  user/
-//  xv6-public (x86, antigua)-> cabeceras en la raiz del proyecto
-//
-//  Detectamos automaticamente cual es. Si tu compilador no soporta
-//  __has_include, compila definiendo la macro a mano:  -DXV6_RISCV
-// ---------------------------------------------------------------------------
+
 #if !defined(XV6_RISCV) && !defined(XV6_X86)
 #  if defined(__has_include)
 #    if __has_include("kernel/types.h")
